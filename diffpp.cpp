@@ -24,9 +24,7 @@ int main(int argc, char** argv)
 	std::vector<std::vector<int>> dp(str1.size() + 1, std::vector<int>(str2.size() + 1));
 	for(unsigned i = str1.size(); i > 0; --i)
 		for(unsigned j = str2.size(); j > 0; --j)
-			if(str1[i - 1] == str2[j - 1])
-				dp[i - 1][j - 1] = dp[i][j] + 1;
-			else dp[i - 1][j - 1] = dp[i][j - 1] > dp[i - 1][j] ? dp[i][j - 1] : dp[i - 1][j];
+			dp[i - 1][j - 1] = str1[i - 1] == str2[j - 1] ? dp[i][j] + 1 : std::max(dp[i][j - 1], dp[i - 1][j]);
 
 	for(unsigned i = 0, j = 0; i < str1.size() && j < str2.size();)
 	{
