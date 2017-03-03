@@ -1,15 +1,8 @@
-#include "colors.hpp"
+#include "diff_algorithms/char_diff.hpp"
+#include "diff_algorithms/line_diff.hpp"
 
 #include<iostream>
-#include<fstream>
 #include<vector>
-
-std::string read_file(const char* filename) {
-	std::ifstream file(filename);
-
-	return std::string(std::istreambuf_iterator<char>(file),
-			std::istreambuf_iterator<char>());
-}
 
 enum DiffType {
 	CHAR_DIFF,
@@ -34,31 +27,13 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	auto str1 = read_file(filenames[0]);
-	auto str2 = read_file(filenames[1]);
+	switch(diff_type) {
+		case CHAR_DIFF:
+			char_diff(filenames[0], filenames[1]);
+			break;
 
-	std::vector<std::vector<int>> dp(str1.size() + 1, std::vector<int>(str2.size() + 1));
-	for(unsigned i = str1.size(); i > 0; --i)
-		for(unsigned j = str2.size(); j > 0; --j)
-			dp[i - 1][j - 1] = str1[i - 1] == str2[j - 1] ? dp[i][j] + 1 : std::max(dp[i][j - 1], dp[i - 1][j]);
-
-	for(unsigned i = 0, j = 0; i < str1.size() && j < str2.size();) {
-		if(i < str1.size() && j < str2.size() && str1[i] == str2[j]) {
-			// color normal
-			update_color(BOTH);
-			std::cout << str1[i];
-			++i; ++j;
-		}
-		else if(i == str1.size() || dp[i][j] != dp[i + 1][j]) {
-			// color red
-			update_color(SECOND);
-			std::cout << str2[j];
-			++j;
-		} else {
-			// color green
-			update_color(FIRST);
-			std::cout << str1[i];
-			++i;
-		}
+		case LINE_DIFF:
+			line_diff(filenames[0], filenames[1]);
+			break;
 	}
 }
