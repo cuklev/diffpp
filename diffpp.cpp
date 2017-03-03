@@ -1,3 +1,5 @@
+#include "colors.hpp"
+
 #include<iostream>
 #include<fstream>
 #include<vector>
@@ -7,21 +9,6 @@ std::string read_file(const char* filename) {
 
 	return std::string(std::istreambuf_iterator<char>(file),
 			std::istreambuf_iterator<char>());
-}
-
-enum Coloring {
-	BOTH,
-	FIRST,
-	SECOND
-};
-
-void update_color(Coloring new_color, const char* ansi_seq) {
-	static Coloring current_color = BOTH;
-
-	if(current_color != new_color) {
-		current_color = new_color;
-		std::cout << ansi_seq;
-	}
 }
 
 int main(int argc, char** argv) {
@@ -41,18 +28,18 @@ int main(int argc, char** argv) {
 	for(unsigned i = 0, j = 0; i < str1.size() && j < str2.size();) {
 		if(i < str1.size() && j < str2.size() && str1[i] == str2[j]) {
 			// color normal
-			update_color(BOTH, "\033[0m");
+			update_color(BOTH);
 			std::cout << str1[i];
 			++i; ++j;
 		}
 		else if(i == str1.size() || dp[i][j] != dp[i + 1][j]) {
 			// color red
-			update_color(SECOND, "\033[0;31m");
+			update_color(SECOND);
 			std::cout << str2[j];
 			++j;
 		} else {
 			// color green
-			update_color(FIRST, "\033[0;32m");
+			update_color(FIRST);
 			std::cout << str1[i];
 			++i;
 		}
