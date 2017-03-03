@@ -11,14 +11,31 @@ std::string read_file(const char* filename) {
 			std::istreambuf_iterator<char>());
 }
 
+enum DiffType {
+	CHAR_DIFF,
+	LINE_DIFF
+};
+
 int main(int argc, char** argv) {
-	if(argc != 3) {
-		std::cerr << "Give two files\n";
-		return 1;
+	DiffType diff_type = CHAR_DIFF;
+
+	std::vector<const char*> filenames;
+	for(int i = 1; i < argc; ++i) {
+		std::string param(argv[i]);
+		if(param ==  "--line-diff") {
+			diff_type = LINE_DIFF;
+		} else if(param == "--char-diff") {
+			diff_type = CHAR_DIFF;
+		} else if(filenames.size() < 2) {
+			filenames.push_back(argv[i]);
+		} else {
+			std::cerr << "You are giving me too many files\n";
+			return 1;
+		}
 	}
 
-	auto str1 = read_file(argv[1]);
-	auto str2 = read_file(argv[2]);
+	auto str1 = read_file(filenames[0]);
+	auto str2 = read_file(filenames[1]);
 
 	std::vector<std::vector<int>> dp(str1.size() + 1, std::vector<int>(str2.size() + 1));
 	for(unsigned i = str1.size(); i > 0; --i)
