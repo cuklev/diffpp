@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 	std::vector<const char*> filenames;
 	for(int i = 1; i < argc; ++i) {
 		std::string param(argv[i]);
-		if(param ==  "--line-diff") {
+		if(param == "--line-diff") {
 			diff_type = LINE_DIFF;
 		} else if(param == "--char-diff") {
 			diff_type = CHAR_DIFF;
